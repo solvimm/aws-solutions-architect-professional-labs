@@ -11,3 +11,6 @@
 
 pkg/
 src/
+
+# Mac OS
+.DS_Store
