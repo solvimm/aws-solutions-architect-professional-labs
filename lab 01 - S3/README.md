@@ -131,8 +131,8 @@
 ## 6.  MFA Delete
 
 1.  Para ativar o MFA Delete é necessário ter instalado o AWS CLI na máquina e a credencial da conta root
-2.  Após configurado o CLI e as credenciais de acesso na máquina rodar o seguinte comando aws s3api put-bucket-versioning 
-`--bucket <yourbucket> --versioning-configuration Status=Enabled,MFADelete=Enabled --mfa "arn:aws:iam::<account number>:mfa/root-account-mfa-device <mfa code>"`
+2.  Após configurado o CLI e as credenciais de acesso na máquina rodar o seguinte comando
+```aws s3api put-bucket-versioning --bucket <yourbucket> --versioning-configuration Status=Enabled,MFADelete=Enabled --mfa "arn:aws:iam::<account number>:mfa/root-account-mfa-device <mfa code>"```
 
 ## 7.  Logs de acesso
 
