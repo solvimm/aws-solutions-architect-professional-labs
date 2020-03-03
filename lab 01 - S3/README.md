@@ -33,7 +33,7 @@
 
 ![Image 7](https://d2yblsmsldwfto.cloudfront.net/csap/lab01/lab-01-s3-07.png)
 
-2.  Clique na aba Overviewe clique no botão Upload
+2.  Clique na aba Overview clique no botão Upload
 
 ![Image 8](https://d2yblsmsldwfto.cloudfront.net/csap/lab01/lab-01-s3-08.png)
 
