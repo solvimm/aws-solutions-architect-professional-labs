@@ -46,7 +46,7 @@
 
 ## 2. Configuração de RDS Multi-AZ
 
-1. Acesse o dashboard do RDS para encontrar o cluster RDS Aurora criado no Lab 12. Note que no cluster criado há apenas uma instância e veja em qual AZ está situada. No print deste exemplo, vemos que foi criado na AZ ```us-east-1d```.
+1. Acesse o dashboard do RDS para encontrar o cluster RDS Aurora criado no anteriormente. Note que no cluster criado há apenas uma instância e veja em qual AZ está situada. No print deste exemplo, vemos que foi criado na AZ ```us-east-1d```.
 
  
 2. Selecione o cluster criado, clique em **Actions** e, em seguida, selecione a opção **Add reader**.
@@ -54,7 +54,7 @@
 
 ![Image 11](https://d1b7vbmva6nnec.cloudfront.net/lab02/lab-02-rds-11.png)
 
-3. Selecione também uma instância ```db.t2.small``` e, em **Network & Security**, selecione uma zona de disponibilidade diferente da utilizada pela primeira instância do cluster. Neste caso, selecionamos ```us-east-1c```.
+3. Selecione também uma instância ```db.t2.small``` e, em **Network & Security**, selecione uma zona de disponibilidade diferente da utilizada pela primeira instância do cluster. Neste caso, selecionamos ```us-east-1b```.
 
 ![Image 12](https://d1b7vbmva6nnec.cloudfront.net/lab02/lab-02-rds-12.png)
 
@@ -81,7 +81,7 @@
 ![Image 14](https://d1b7vbmva6nnec.cloudfront.net/lab02/lab-02-rds-14.png)
 
 
-2. Determine a **Policy name**, a Target metric e Target Value. Neste lab, vamos definir a regra de escala para *Average CPU utilization of Aurora Replicas* acima de 70%,
+2. Determine a **Policy name**, a **Target metric** e **Target Value**. Neste lab, vamos definir a regra de escala para **Average CPU utilization of Aurora Replicas** acima de 70%,
 
 ![Image 15](https://d1b7vbmva6nnec.cloudfront.net/lab02/lab-02-rds-15.png)
 
@@ -98,11 +98,11 @@
 
 ## 4. Backup Automático
 
-1. Para habilitar o backup automático, selecione o cluster e clique em **Modify **.
+1. Para habilitar o backup automático, selecione o cluster e clique em **Modify**.
 
 2. Faça o scroll até a seção **Backup**.
 
-3. Nessa seção, poderemos configurar o período de retenção (1 dia por default) e a janela de execução. Neste lab, vamos definir um período de retenção de 30 dias o início às 03h00 UTC.
+3. Nessa seção, poderemos configurar o período de retenção (1 dia por default) e a janela de execução. Vamos definir um período de retenção de 30 dias com o início às 03h00 UTC.
 
 ![Image 17](https://d1b7vbmva6nnec.cloudfront.net/lab02/lab-02-rds-17.png)
 
