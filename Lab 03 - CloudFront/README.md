@@ -1,6 +1,5 @@
 # Lab 03 - CloudFront
 
-
 ## 1. Fazendo Upload de uma imagem no S3
 
 1. Abra o console do S3 em  https://s3.console.aws.amazon.com/s3/home?region=us-east-1
