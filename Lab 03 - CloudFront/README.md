@@ -16,6 +16,7 @@ Clique no Bucket onde quer fazer o upload da imagem.
 ![Image 03](https://d1b7vbmva6nnec.cloudfront.net/lab03/lab-03-cloudfront-03.png#1)
 
 4. Por fim, clique em **Upload**.
+
 **OBS: Para poder acessar o arquivo é necessário que os objetos do bucket estejam públicos.**
 Após realizar o Upload da imagem, clique no arquivo.
 
@@ -41,12 +42,9 @@ Escolha, **Create Distribution**.
 
 ![Image 08](https://d1b7vbmva6nnec.cloudfront.net/lab03/lab-03-cloudfront-08.png#1)
 
-3. O primeiro passo é especificar o Origin Domain Name. O Origin Domain Name pode ser um Bucket do S3, um Bucket do S3 configurado como site, uma instância EC2, um Load Balancer, etc. Selecione o Bucket do S3 configurado anteriormente. 
-
+3. O primeiro passo é especificar o Origin Domain Name. O Origin Domain Name pode ser um Bucket do S3, um Bucket do S3 configurado como site, uma instância EC2, um Load Balancer, etc. Selecione o Bucket do S3 configurado anteriormente.
 Após isso especifique o Origin Path. Se você quiser que o CloudFront solicite seu conteúdo de um diretório do seu recurso ou origem personalizada da AWS, insira o caminho do diretório começando com barra (/). O CloudFront inclui o caminho do diretório no valor de Origin Domain Name. (Campo opcional)
-
 Em Origin ID você poderá usar o ID especificado aqui para identificar a origem ou o grupo de origens para o qual o CloudFront roteará uma solicitação quando ela tiver o mesmo caminho padrão desse comportamento de cache. Ao escolher o Origin Domain Name, automaticamente este campo é preenchido.
-
 Em Restrict Bucket Access (Aplica-se apenas a origens do bucket do Amazon S3 ,exceto se configurado como endpoints do site). Escolha Yes (Sim) se quiser exigir que os usuários acessem objetos em um bucket do Amazon S3 usando apenas URLs do CloudFront, e não do Amazon S3. Em seguida, especifique valores adicionais. Escolha No (Não) se quiser que os usuários acessem objetos usando URLs do CloudFront ou do Amazon S3.
 
 
@@ -55,7 +53,6 @@ Em Restrict Bucket Access (Aplica-se apenas a origens do bucket do Amazon S3 ,ex
 ![Image 10](https://d1b7vbmva6nnec.cloudfront.net/lab03/lab-03-cloudfront-10.png#1)
 
 ![Image 11](https://d1b7vbmva6nnec.cloudfront.net/lab03/lab-03-cloudfront-11.png#1)
-
 
 4. O restante mantenha o padrão, observe que ao lado de cada recurso é possível ver uma bolinha com um “i”, ao clicar na mesma você terá informações mais detalhadas do recurso.
 Por fim, clique em **Create Distribution**.
