@@ -44,9 +44,10 @@ Escolha, **Create Distribution**.
 
 3. O primeiro passo é especificar o Origin Domain Name. O Origin Domain Name pode ser um Bucket do S3, um Bucket do S3 configurado como site, uma instância EC2, um Load Balancer, etc. Selecione o Bucket do S3 configurado anteriormente.
 Após isso especifique o Origin Path. Se você quiser que o CloudFront solicite seu conteúdo de um diretório do seu recurso ou origem personalizada da AWS, insira o caminho do diretório começando com barra (/). O CloudFront inclui o caminho do diretório no valor de Origin Domain Name. (Campo opcional)
-Em Origin ID você poderá usar o ID especificado aqui para identificar a origem ou o grupo de origens para o qual o CloudFront roteará uma solicitação quando ela tiver o mesmo caminho padrão desse comportamento de cache. Ao escolher o Origin Domain Name, automaticamente este campo é preenchido.
-Em Restrict Bucket Access (Aplica-se apenas a origens do bucket do Amazon S3 ,exceto se configurado como endpoints do site). Escolha Yes (Sim) se quiser exigir que os usuários acessem objetos em um bucket do Amazon S3 usando apenas URLs do CloudFront, e não do Amazon S3. Em seguida, especifique valores adicionais. Escolha No (Não) se quiser que os usuários acessem objetos usando URLs do CloudFront ou do Amazon S3.
 
+4. Em Origin ID você poderá usar o ID especificado aqui para identificar a origem ou o grupo de origens para o qual o CloudFront roteará uma solicitação quando ela tiver o mesmo caminho padrão desse comportamento de cache. Ao escolher o Origin Domain Name, automaticamente este campo é preenchido.
+
+5. Em Restrict Bucket Access (Aplica-se apenas a origens do bucket do Amazon S3 ,exceto se configurado como endpoints do site). Escolha Yes (Sim) se quiser exigir que os usuários acessem objetos em um bucket do Amazon S3 usando apenas URLs do CloudFront, e não do Amazon S3. Em seguida, especifique valores adicionais. Escolha No (Não) se quiser que os usuários acessem objetos usando URLs do CloudFront ou do Amazon S3.
 
 ![Image 09](https://d1b7vbmva6nnec.cloudfront.net/lab03/lab-03-cloudfront-09.png#1)
 
