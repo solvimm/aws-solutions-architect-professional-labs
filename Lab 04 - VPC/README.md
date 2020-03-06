@@ -95,11 +95,11 @@
 
 6. Na página inicial de VPC, acesse em **Your VPCs** no menu da esquerda para poder visualizar todas as VPCs criadas e escolher a VPC que deseja criar o Flow Logs.
 
-7. Selecione a VPC e clique em **Actions** e, em seguida, clique em **Create flow** fog para iniciar a configuração do seu VPC Flow Logs Group.
+7. Selecione a VPC e clique em **Actions** e, em seguida, clique em **Create flow** para iniciar a configuração do seu VPC Flow Logs Group.
 
 ![Image 09](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-09.png)
 
-8. Na página de criação, altere o filter para **All** e deixe o Destination enviando os logs para o CloudWatch.
+8. Na página de criação, altere o filter para **All** e deixe o **Destination** enviando os logs para o CloudWatch.
 
 9. No **Destination log group**, selecione o Flow Logs Group criado anteriormente no CloudWatch e clique em **Set Up Permissions** para criar a IAM Role que vai permitir a VPC escrever os Logs no CloudWatch.
 
@@ -145,15 +145,17 @@
 
 7. Na opção **Policy**, mantenha selecionado **Full Access**. Clique em **Create Endpoint**.
 
+![Image 19](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-19.png)
+
 8. Após este passo, você receberá um aviso confirmando a criação do endpoint. Clique em **Close**.
 
-![Image 19](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-19.png)
+![Image 20](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-20.png)
 
 9. Verifique se o endpoint é exibido no painel.
 
-![Image 20](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-20.png)
+![Image 21](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-21.png)
 
 10. Após alguns minutos, verifique se a rota foi inserida na route table corretamente.
 Para isso, entre no painel de **Route Tables**, selecione a tabela de rotas, e clique na aba Routes. Se tudo estiver correto, deve existir uma linha contendo a regra de roteamento, com Target para o id do VPC Endpoint (vpce-xxxxxxxxxxx) criado.
 
-![Image 21](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-21.png)
+![Image 22](https://d1b7vbmva6nnec.cloudfront.net/lab04/lab-04-vpc-22.png)
