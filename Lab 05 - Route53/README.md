@@ -122,12 +122,13 @@ Para este Lab, será necessário criar préviamente os seguintes recursos:
 
 ![Image 10](https://d1b7vbmva6nnec.cloudfront.net/lab05/lab-05-route53-10.png)
 
-4. Acesse a EC2 Bastion-us, via ssh, e verifique o retorno do comando: `nslookup us-east-1.solvimm.lab` 
+4. Acesse a EC2 Bastion-us, via ssh, e verifique o retorno do comando: `nslookup us-east-1.solvimm.lab`.
 Deverá retornar o IP do Server1-us
 
 5. Vamos simular uma falha no health-check, forçando ele a ficar unhealthy, selecionando a opção **Invert health check status** no **Advanced Configuration**
 
 ![Image 11](https://d1b7vbmva6nnec.cloudfront.net/lab05/lab-05-route53-11.png)
 
-6. Acesse a EC2 Bastion-us, via ssh, e verifique o retorno do comando: `nslookup us-east-1.solvimm.lab` Deverá retornar o IP do Server1-eu
+6. Acesse a EC2 Bastion-us, via ssh, e verifique o retorno do comando: `nslookup us-east-1.solvimm.lab`. 
+Deverá retornar o IP do Server1-eu
 
