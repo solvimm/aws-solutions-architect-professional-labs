@@ -1,0 +1,448 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Demonstrates how to use GuardDuty Findings to automate WAF ACL and VPC NACL entries.
+  The template installs a Lambda function that updates an AWS WAF IP Set and VPC NACL.
+
+Parameters:
+  Retention:
+    Description: How long to retain IP addresses in the blacklist (in minutes). Default is 12 hours, minimum is 5 minutes and maximum one week (10080 minutes)
+    Type: Number
+    Default: 720
+    MinValue: 5
+    MaxValue: 10080
+    ConstraintDescription: Minimum of 5 minutes and maximum of 10080 (one week).
+  AdminEmail:
+    Description: Email address to receive notifications. Must be a valid email address.
+    Type: String
+    AllowedPattern: ^(?:[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$
+  CloudFrontIPSetId:
+    Type: String
+    Default: 'False'
+    Description: ID for existing CloudFront IP Set. Enter if there is an existing CloudFront IP Set to use. Leave set to False for creation of new CloufFront Web ACL and IP Set.
+  ALBIPSetId:
+    Type: String
+    Default: 'False'
+    Description: ID for existing ALB IP Set. Enter if there is an existing ALB IP Set to use. This must be in region. Leave set to False for creation of new ALB Web ACL and IP Set.
+  ArtifactsBucket:
+    Description: S3 bucket with artifact files (Lambda functions, templates, html files, etc.). Leave default for N. Virginia.
+    Type: String
+    Default: awsiammedia
+    AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
+    ConstraintDescription: ArtifactsBucket S3 bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-).
+      It cannot start or end with a hyphen (-).
+  ArtifactsPrefix:
+    Description: Path in the S3 bucket containing artifact files. Leave default for N. Virginia.
+    Type: String
+    Default: public/sample/
+    AllowedPattern: ^[0-9a-zA-Z-/]*$
+    ConstraintDescription: ArtifactsPrefix key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-),
+      and forward slash (/).
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: GD2ACL Configuration
+      Parameters:
+      - AdminEmail
+      - Retention
+      - CloudFrontIPSetId
+      - ALBIPSetId
+    - Label:
+        default: Artifact Configuration
+      Parameters:
+      - ArtifactsBucket
+      - ArtifactsPrefix
+
+    ParameterLabels:
+      AdminEmail:
+        default: Notification email (REQUIRED)
+      Retention:
+        default: Retention time in minutes
+      CloudFrontIPSetId:
+        default: IP Set for global CloudFront WAF
+      ALBIPSetId:
+        default: IP Set for regional ALB WAF
+      ArtifactsBucket:
+        default: S3 bucket for artifacts
+      ArtifactsPrefix:
+        default: S3 path to artifacts
+
+Conditions:
+# Create CloudFront or ALB Web ACL?
+  CreateCloudFrontWebACL: !Equals [!Ref CloudFrontIPSetId, 'False' ]
+  CreateALBWebACL: !Equals [!Ref ALBIPSetId, 'False' ]
+
+Resources:
+
+  GuardDutytoACLLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: "GuardDuty to ACL Function"
+      Handler : "guardduty_to_acl_lambda.lambda_handler"
+      MemorySize: 1024
+      Timeout: 300
+      ReservedConcurrentExecutions: 1
+      Role: !GetAtt GuardDutytoACLRole.Arn
+      Runtime : "python3.6"
+      Environment:
+        Variables:
+          ACLMETATABLE: !Ref GuardDutytoACLDDBTable
+          ALB_IP_SET_ID: !If [ CreateALBWebACL, !Ref ALBBlacklistIPSet, !Ref ALBIPSetId ]
+          CLOUDFRONT_IP_SET_ID: !If [ CreateCloudFrontWebACL, !Ref CloudFrontBlacklistIPSet, !Ref CloudFrontIPSetId ]
+          SNSTOPIC: !Ref GuardDutytoACLSNSTopic
+      Code:
+        S3Bucket: !Sub ${ArtifactsBucket}
+        S3Key: !Sub ${ArtifactsPrefix}guardduty_to_acl_lambda.zip
+
+  GuardDutytoACLRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              "sts:AssumeRole"
+      Path: "/"
+
+  GuardDutytoACLPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        Fn::Join:
+          - '-'
+          - [ !Ref "AWS::Region", 'guardduty-to-nacl-wafipset' ]
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Action:
+            - waf:GetIPSet
+            - waf:UpdateIPSet
+            Resource: !If [ CreateCloudFrontWebACL, !Sub 'arn:aws:waf::${AWS::AccountId}:ipset/${CloudFrontBlacklistIPSet}', !Sub 'arn:aws:waf::${AWS::AccountId}:ipset/${CloudFrontIPSetId}' ]
+          -
+            Effect: Allow
+            Action:
+            - waf-regional:GetIPSet
+            - waf-regional:UpdateIPSet
+            Resource: !If [ CreateALBWebACL, !Sub 'arn:aws:waf-regional:${AWS::Region}:${AWS::AccountId}:ipset/${ALBBlacklistIPSet}', !Sub 'arn:aws:waf-regional:${AWS::Region}:${AWS::AccountId}:ipset/${ALBIPSetId}' ]
+          -
+            Effect: Allow
+            Action:
+            - waf:GetChangeToken
+            Resource: "*"
+          -
+            Effect: Allow
+            Action:
+            - waf-regional:GetChangeToken
+            Resource: "*"
+          -
+            Effect: "Allow"
+            Action:
+              - "ec2:Describe*"
+              - "ec2:*NetworkAcl*"
+            Resource: "*"
+          -
+            Effect: "Allow"
+            Action:
+              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: "arn:aws:logs:*:*:*"
+          -
+            Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:DeleteItem
+            Resource: !GetAtt GuardDutytoACLDDBTable.Arn
+          -
+            Effect: Allow
+            Action:
+            - sns:Publish
+            Resource: !Ref GuardDutytoACLSNSTopic
+      Roles:
+        -
+          Ref: "GuardDutytoACLRole"
+
+  # GuardDuty CloudWatch Event - For GuardDuty Finding:
+  GuardDutytoACLEvent:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Description: "GuardDuty Malicious Host Events"
+      EventPattern:
+        source:
+        - aws.guardduty
+        detail:
+          type:
+          - "UnauthorizedAccess:EC2/SSHBruteForce"
+          - "UnauthorizedAccess:EC2/RDPBruteForce"
+          - "Recon:EC2/PortProbeUnprotectedPort"
+          - "Trojan:EC2/BlackholeTraffic"
+          - "Backdoor:EC2/XORDDOS"
+          - "UnauthorizedAccess:EC2/TorIPCaller"
+          - "Trojan:EC2/DropPoint"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn: !GetAtt GuardDutytoACLLambda.Arn
+          Id: "GuardDutyEvent-Lambda-Trigger"
+
+  GuardDutytoACLInvokePermissions:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !Ref "GuardDutytoACLLambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+
+  GuardDutytoACLDDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: "NetACLId"
+          AttributeType: "S"
+        -
+          AttributeName: "CreatedAt"
+          AttributeType: "N"
+      KeySchema:
+        -
+          AttributeName: "NetACLId"
+          KeyType: "HASH"
+        -
+          AttributeName: "CreatedAt"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+
+  CloudFrontBlacklistIPSet:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAF::IPSet
+    Properties:
+      Name: "GD2ACL CloudFront IPSet for blacklisted IP adresses"
+      IPSetDescriptors:
+        -
+          Type: "IPV4"
+          Value: "127.0.0.1/32"
+
+  CloudFrontBlacklistIPSetRule:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAF::Rule
+    Properties:
+      Name: "GD2ACLCloudFrontBlacklistIPSetRule"
+      MetricName: "IPSetRule"
+      Predicates:
+        -
+          DataId:
+            Ref: "CloudFrontBlacklistIPSet"
+          Negated: false
+          Type: "IPMatch"
+
+  CloudFrontBlacklistWebACL:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAF::WebACL
+    Properties:
+      Name: "GD2ACL CloudFront WebACL to block blacklisted IP addresses"
+      DefaultAction:
+        Type: "ALLOW"
+      MetricName: "GD2ACLCloudFrontBlacklistWebACL"
+      Rules:
+        -
+          Action:
+            Type: "BLOCK"
+          Priority: 1
+          RuleId:
+            Ref: "CloudFrontBlacklistIPSetRule"
+
+  ALBBlacklistIPSet:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAFRegional::IPSet
+    Properties:
+      Name: "GD2ACL ALB IPSet for blacklisted IP adresses"
+      IPSetDescriptors:
+        -
+          Type: "IPV4"
+          Value: "127.0.0.1/32"
+
+  ALBBlacklistIPSetRule:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAFRegional::Rule
+    Properties:
+      Name: "GD2ACLALBBlacklistIPSetRule"
+      MetricName: "IPSetRule"
+      Predicates:
+        -
+          DataId:
+            Ref: "ALBBlacklistIPSet"
+          Negated: false
+          Type: "IPMatch"
+
+  ALBBlacklistWebACL:
+    Condition: CreateCloudFrontWebACL
+    Type: AWS::WAFRegional::WebACL
+    Properties:
+      Name: "GD2ACL ALB WebACL to block blacklisted IP addresses"
+      DefaultAction:
+        Type: "ALLOW"
+      MetricName: "GD2ACLALBBlacklistWebACL"
+      Rules:
+        -
+          Action:
+            Type: "BLOCK"
+          Priority: 1
+          RuleId:
+            Ref: "ALBBlacklistIPSetRule"
+
+  PruneOldEntriesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Description: "Prune old entries in WAF ACL and NACLs"
+      Handler : "prune_old_entries.lambda_handler"
+      MemorySize: 1024
+      Timeout: 300
+      Role: !GetAtt PruneOldEntriesRole.Arn
+      Runtime : "python3.6"
+      Environment:
+        Variables:
+          ACLMETATABLE: !Ref GuardDutytoACLDDBTable
+          ALB_IP_SET_ID: !If [ CreateALBWebACL, !Ref ALBBlacklistIPSet, !Ref ALBIPSetId ]
+          CLOUDFRONT_IP_SET_ID: !If [ CreateCloudFrontWebACL, !Ref CloudFrontBlacklistIPSet, !Ref CloudFrontIPSetId ]
+          RETENTION: !Ref Retention
+      Code:
+        S3Bucket: !Sub ${ArtifactsBucket}
+        S3Key: !Sub ${ArtifactsPrefix}prune_old_entries.zip
+
+  PruneOldEntriesRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Principal:
+              Service:
+                - "lambda.amazonaws.com"
+            Action:
+              "sts:AssumeRole"
+      Path: "/"
+
+  PruneOldEntriesPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName:
+        Fn::Join:
+          - '-'
+          - [ !Ref "AWS::Region", 'prune-old-entries' ]
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          -
+            Effect: Allow
+            Action:
+            - waf:GetIPSet
+            - waf:UpdateIPSet
+            Resource: !If [ CreateCloudFrontWebACL, !Sub 'arn:aws:waf::${AWS::AccountId}:ipset/${CloudFrontBlacklistIPSet}', !Sub 'arn:aws:waf::${AWS::AccountId}:ipset/${CloudFrontIPSetId}' ]
+          -
+            Effect: Allow
+            Action:
+            - waf-regional:GetIPSet
+            - waf-regional:UpdateIPSet
+            Resource: !If [ CreateALBWebACL, !Sub 'arn:aws:waf-regional:${AWS::Region}:${AWS::AccountId}:ipset/${ALBBlacklistIPSet}', !Sub 'arn:aws:waf-regional:${AWS::Region}:${AWS::AccountId}:ipset/${ALBIPSetId}' ]
+          -
+            Effect: Allow
+            Action:
+            - waf:GetChangeToken
+            Resource: "*"
+          -
+            Effect: Allow
+            Action:
+            - waf-regional:GetChangeToken
+            Resource: "*"
+          -
+            Effect: "Allow"
+            Action:
+              - "ec2:Describe*"
+              - "ec2:*NetworkAcl*"
+            Resource: "*"
+          -
+            Effect: "Allow"
+            Action:
+              - "logs:CreateLogGroup"
+              - "logs:CreateLogStream"
+              - "logs:PutLogEvents"
+            Resource: "arn:aws:logs:*:*:*"
+          -
+            Effect: Allow
+            Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:DeleteItem
+            Resource: !GetAtt GuardDutytoACLDDBTable.Arn
+      Roles:
+        -
+          Ref: "PruneOldEntriesRole"
+
+  PruneOldEntriesSchedule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Description: "ScheduledPruningRule"
+      ScheduleExpression: "rate(5 minutes)"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn: !GetAtt PruneOldEntriesLambda.Arn
+          Id: "TargetFunctionV1"
+
+  PruneOldEntriesPermissionToInvoke:
+    DependsOn:
+      - GuardDutytoACLLambda
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !Ref PruneOldEntriesLambda
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn: !GetAtt PruneOldEntriesSchedule.Arn
+
+  GuardDutytoACLSNSTopic:
+    Type: "AWS::SNS::Topic"
+    Properties:
+      Subscription:
+        -
+          Endpoint: !Ref AdminEmail
+          Protocol: "email"
+
+Outputs:
+  GuardDutytoACLLambda:
+    Description: GD2ACL Primary Lambda Function.
+    Value: !Sub https://console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${GuardDutytoACLLambda}
+  PruneOldEntriesLambda:
+    Description: GD2ACL Entry Pruning Lambda Function.
+    Value: !Sub https://console.aws.amazon.com/lambda/home?region=${AWS::Region}#/functions/${PruneOldEntriesLambda}
+  ACLMetaTable:
+    Description: GD2ACL DynamoDB State Table
+    Value: !Ref GuardDutytoACLDDBTable
+  ALBIPSetId:
+    Description: ALB WAF IP Set Id
+    Value: !If [ CreateALBWebACL, !Ref ALBBlacklistIPSet, !Ref ALBIPSetId ]
+  CloudFrontIPSetId:
+    Description: CloudFront WAF IP Set Id
+    Value: !If [ CreateCloudFrontWebACL, !Ref CloudFrontBlacklistIPSet, !Ref CloudFrontIPSetId ]
+  Retention:
+    Description: ACL Entry Time to Live in Minutes
+    Value: !Ref Retention
+  Region:
+    Description: Region of the stack.
+    Value:
+      Ref: AWS::Region
