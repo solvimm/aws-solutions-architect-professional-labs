@@ -27,7 +27,7 @@ Clique **Next**. Revise as informações na tela e clique **Create bucket**.
 
 ## 2. Access Control List
 
-1. Vamos acessar essa bucket e verificar as suas configurações.
+1. Vamos acessar o bucket e verificar as suas configurações.
 Clique em cima do nome na bucket criada.
 
 ![Image 06](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-06.png)
