@@ -6,7 +6,7 @@
 
 ![Image 01](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-01.png)
 
-2. Para esse tutorial vamos criar uma bucket. Clique em **Create bucket**
+2. Para esse tutorial vamos criar um bucket. Clique em **Create bucket**
 
 ![Image 02](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-02.png)
 
@@ -19,7 +19,7 @@ Escolha a região onde a bucket vai ser criado. Clique **Next**
 
 ![Image 04](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-04.png)
 
-5. Note que todos os buckets são configurados para bloquear acesso público durante sua criação. Para que uma bucket fique público é necessário que o usuário, com as devidas permissões, realize essa modificação.
+5. Note que todos os buckets são configurados para bloquear acesso público durante sua criação. Para que um bucket fique público é necessário que o usuário, com as devidas permissões, realize essa modificação.
 Lembramos que essa ação é considerada falha grave de segurança já que expõe seus dados para a internet.
 Clique **Next**. Revise as informações na tela e clique **Create bucket**.
 
@@ -32,11 +32,11 @@ Clique em cima do nome no bucket criado.
 
 ![Image 06](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-06.png)
 
-2. Após acessar o bucket somos direcionados para o local onde os arquivos são armazenados. Já que acabamos de criar o bucket não existe nenhum arquivo dentro dela. Clique em **Permissions**
+2. Após acessar o bucket somos direcionados para o local onde os arquivos são armazenados. Já que acabamos de criar o bucket não existe nenhum arquivo dentro dele. Clique em **Permissions**
 
 ![Image 07](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-07.png)
 
-3. Existem 4 configurações dentro de permissions que podemos modificar. A primeira, **Block public access** nos possibilita modificar a visibilidade dessa bucket. Podemos deixar ela público ou privado. Em nosso exemplo a bucket esta privado. Clique em **Access Control List**.
+3. Existem 4 configurações dentro de permissions que podemos modificar. A primeira, **Block public access** nos possibilita modificar a visibilidade do bucket. Podemos deixar ele público ou privado. Em nosso exemplo o bucket esta privado. Clique em **Access Control List**.
 
 ![Image 08](https://d1b7vbmva6nnec.cloudfront.net/lab07/lab-07-security-08.png)
 
