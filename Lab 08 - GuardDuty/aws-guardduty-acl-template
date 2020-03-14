@@ -33,7 +33,6 @@ Parameters:
   ArtifactsPrefix:
     Description: Path in the S3 bucket containing artifact files. Leave default for N. Virginia.
     Type: String
-    Default: public/sample/
     AllowedPattern: ^[0-9a-zA-Z-/]*$
     ConstraintDescription: ArtifactsPrefix key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-),
       and forward slash (/).

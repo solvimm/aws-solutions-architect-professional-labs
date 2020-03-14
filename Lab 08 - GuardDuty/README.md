@@ -77,11 +77,13 @@
     - S3 bucket for artifacts: **immersion-day-si-solvimm-gd2acl-artifacts-nome-sobrenome**
     - S3 path to artifacts: **<VAZIO>**
 
-17. Clicar em **Next** e na próxima tela **Next** novamente.
+17. Clicar em **Next**.
 
-18. Clicar em **Create Stack**
+18. Em **Capabilities** marque a opção **I acknowledge that AWS CloudFormation might create IAM resources.**. Clique em **Next**
 
-19. Enquanto a stack estiver sendo criada, vá ao email cadastrado no campo **Notification email**, e procure por um email com o assunto **AWS Notification – Subscription Confirmation**. Entre neste email e confirme clicando no link.
+19. Clicar em **Create Stack**
+
+20. Enquanto a stack estiver sendo criada, vá ao email cadastrado no campo **Notification email**, e procure por um email com o assunto **AWS Notification – Subscription Confirmation**. Entre neste email e confirme clicando no link.
 
 ![Image 08](https://d1b7vbmva6nnec.cloudfront.net/lab08/lab-08-guardduty-08.png)
 
@@ -125,7 +127,7 @@
 
 ## 3. AWS WAF
 
-1. No painel, clique em **Services > WAF & Shield**, e selecione **IP Addresses**.
+1. No painel, clique em **Services > WAF & Shield**, e selecione **Switch to AWS WAF Classic > IP Addresses**.
 
 2. Clique em **Filtro**, selecione **Global (CloudFront)**, e depois selecione o IPSet chamado **GD2ACL CloudFront IPSet for Blacklisted IP addresses**.
 
