@@ -3,7 +3,6 @@
 *.jar
 *.exe
 *.msi
-*.zip
 *.tgz
 *.log
 *.log.*
