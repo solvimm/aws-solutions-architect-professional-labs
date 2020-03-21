@@ -1,4 +1,4 @@
-# Lab 24 - Serverless Website
+# Lab 10 - Serverless Website
 
 ## 1. Criação de Função Lambda
 
