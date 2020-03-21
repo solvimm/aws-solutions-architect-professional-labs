@@ -85,11 +85,7 @@
 
 ![Image 12](https://d1b7vbmva6nnec.cloudfront.net/lab11/lab11-autoscaling-12.png)
 
-13. Defina uma **Key** e um **Value** para tags e clique em **Review**
-
-![Image 13](https://d1b7vbmva6nnec.cloudfront.net/lab11/lab11-autoscaling-13.png)
-
-14. Clique em **Create Auto Scaling group**
+13. Clique em **Create Auto Scaling group**
 
 ![Image 14](https://d1b7vbmva6nnec.cloudfront.net/lab11/lab11-autoscaling-14.png)
 
