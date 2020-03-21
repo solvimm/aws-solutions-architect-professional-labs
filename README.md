@@ -14,3 +14,6 @@ Laboratórios práticos para preparação para a prova de certificação para AW
 - [Lab 07 - Security S3](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2007%20-%20Security%20S3)
 - [Lab 08 - GuardDuty](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2008%20-%20GuardDuty)
 - [Lab 09 - Migration RDS Aurora](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2009%20-%20Migration%20RDS%20Aurora)
+- [Lab 10 - Serverless Website](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2010%20-%20Serverless%20WebSite)
+- [Lab 11 - Auto Scaling](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2011%20-%20%20Auto%20Scaling)
+- [Lab 12 - Load Balancer & Health Checks](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2012%20-%20Load%20Balancer%20%26%20Health%20Checks)
