@@ -18,3 +18,4 @@ Laboratórios práticos para preparação para a prova de certificação para AW
 - [Lab 11 - Auto Scaling](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2011%20-%20%20Auto%20Scaling)
 - [Lab 12 - Load Balancer & Health Checks](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2012%20-%20Load%20Balancer%20%26%20Health%20Checks)
 - [Lab 13 - Billing Alarm](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2013%20-%20Billing%20Alarm)
+- [Lab 14 - Zero Downtime Deployment](https://github.com/solvimm/aws-solutions-architect-professional-labs/tree/master/Lab%2014%20-%20Zero%20Downtime%20Deployments)
