@@ -1,27 +1,56 @@
 # Lab 13 - Billing Alarm
 
+### 1. Criação de Tag
 
-### 1. Configuração de Budget
+1. Crie uma nova instancia EC2
 
-1. Abra o console da AWS na parte de Budget em https://console.aws.amazon.com/billing/home?#/budgets.
+2. Em **Instances** selecione a instancia criada e na aba **Tags** clique em **Add/Edit Tags**
+
+![Image 01](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-01.png)
+
+3. Em **Add/Edit Tags** clique em **Create Tag** e em **Key** coloque ``Environment`` e **Value** coloque ``Production``. 
+Clique em **Save**
+
+![Image 02](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-02.png)
+
+### 2. Alocação de Tags de Custo
+
+1. Abra o console da AWS na parte de Billing em https://console.aws.amazon.com/billing.
+
+2. Clique em **Cost allocation tags**
+
+![Image 03](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-03.png)
+
+3. Em **User-Defined Cost Allocation Tags** Selecione todas as tags e clique em **Activate** e apos a mensagem de confirmação clique novamente em **Activate**
+
+**OBS:** As tags podem levar até 24 horas para aparecer em Billing e Cost Management 
+
+![Image 04](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-04.png)
+
+### 3. Configuração de Bucket
+
+1. Na tela de Billing clique em **Budgets**
 
 2. Na parte superior da página, clique em **Create Budget**.
+
+![Image 05](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-05.png)
 
 3. Em **Select Budget Type**, escolha **Cost Budget** (orçamento de custo).
 
 4. Clique em **Set up your budget**.
 
-![Image 01](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-02.png)
+![Image 06](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-06.png)
 
 5. Em **Name**, defina um nome para o orçamento de forma que fique claro o que esse orçamento significa, como, por exemplo, Budget Mensal. O nome do orçamento deve ser exclusivo na sua conta e pode usar A-Z, a-z, espaços e os seguintes caracteres: _.:/=+-%@. Em **Period**, escolha a frequência com que você deseja que o orçamento redefina o gasto previsto e real. O período pode ser Monthly (Mensal), Quarterly (Trimestral) ou Annually (Anual). 
 
 
 6. Em **Budgeted Amount**, informe o valor total que você deseja gastar nesse período de orçamento. Em orçamentos de planejamento mensal e trimestral, insira o valor que você deseja gastar em cada período planejado.
 
-![Image 02](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-03.png)
+![Image 07](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-07.png)
 
+7. Em **Budget parameters (optional)** cliquem em **Tag** e procure pela tag criada **Environment**. Selecione a tag
 
-### 2. Configuração de Alerta
+### 3. Configuração de Alerta
  
 1. Selecione **Configure Alerts**.
 
@@ -33,7 +62,7 @@
 
 4. Em **Email Contacts**, digite os endereços de e-mail para os quais você deseja que as notificações sejam enviadas e clique em **Add email contact**. Separe vários endereços de e-mail com uma vírgula. Uma notificação pode ter até 10 endereços de e-mail.
 
-![Image 03](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-04.png)
+![Image 08](https://d1b7vbmva6nnec.cloudfront.net/lab13/lab-13-billing-08.png)
 
 
 5. Clique em **Confirm Budget**.
